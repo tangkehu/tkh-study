@@ -1,4 +1,4 @@
-package com.tkh.flink;
+package pers.tkh.flink;
 
 import org.apache.flink.table.descriptors.DescriptorProperties;
 import org.apache.flink.table.descriptors.SchemaValidator;

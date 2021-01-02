@@ -1,4 +1,4 @@
-package com.tkh.flink;
+package pers.tkh.flink;
 
 import org.apache.flink.api.common.serialization.DeserializationSchema;
 import org.apache.flink.api.common.typeinfo.TypeInformation;

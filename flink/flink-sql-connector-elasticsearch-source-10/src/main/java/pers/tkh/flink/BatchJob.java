@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package com.tkh.flink;
+package pers.tkh.flink;
 
 import org.apache.flink.api.java.ExecutionEnvironment;
 

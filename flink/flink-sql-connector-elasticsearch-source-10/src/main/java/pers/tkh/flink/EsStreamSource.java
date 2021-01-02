@@ -1,4 +1,4 @@
-package com.tkh.flink;
+package pers.tkh.flink;
 
 import org.apache.commons.collections.map.CaseInsensitiveMap;
 import org.apache.flink.api.java.typeutils.RowTypeInfo;

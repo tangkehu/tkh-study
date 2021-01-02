@@ -1,4 +1,4 @@
-package com.tkh.flink;
+package pers.tkh.flink;
 
 public class EsEntry {
     public String data;
