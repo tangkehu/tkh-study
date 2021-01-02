@@ -29,3 +29,7 @@ hs_err_pid*
 
 # 跳过JAVA的target
 target/
+
+# 跳过idea自动生成的文件
+.idea/
+*.iml
