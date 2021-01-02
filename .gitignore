@@ -26,3 +26,6 @@ hs_err_pid*
 .classpath
 .project
 .settings/
+
+# 跳过JAVA的target
+target/
