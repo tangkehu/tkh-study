@@ -4,14 +4,14 @@ import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.DataFrame;
 import org.apache.spark.sql.SQLContext;
-import org.elasticsearch.spark.sql.EsSparkSQL;
-import scala.collection.mutable.HashMap;
+import org.elasticsearch.spark.sql.api.java.JavaEsSparkSQL;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -28,7 +28,7 @@ public class SparkSqlEsJob {
         // spark sql 环境配置
         SparkConf sparkConf = new SparkConf().setMaster("local[*]");
         sparkConf.setAppName(sqlPath.getFileName().toString().split("\\.")[0]);
-        // 设置默认的日期格式类型为String来避开潜在的日期类型转换错误
+        // 设置默认的日期格式类型为String来避开潜在的日期类型转换错误（临时解决方案）
         sparkConf.set("es.mapping.date.rich", "false");
         // 优化从ES读取的速度和稳定性的配置
         sparkConf.set("es.scroll.size", "20000");
@@ -59,7 +59,7 @@ public class SparkSqlEsJob {
             throw new IOException("输出的ES地址或索引或数据为空");
         }
         // 将输出写入ES
-        EsSparkSQL.saveToEs(sqlOut, indexOut, new HashMap<String, String>(){{put("es.resource.write", nodesOut[0]);}});
+        JavaEsSparkSQL.saveToEs(sqlOut, indexOut, new HashMap<String, String>(){{put("es.resource.write", nodesOut[0]);}});
     }
 
     /**

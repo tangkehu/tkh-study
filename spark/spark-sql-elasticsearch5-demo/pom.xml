@@ -30,6 +30,12 @@
             <version>${spark.version}</version>
             <scope>${scope.type}</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-sql_${scala.version}</artifactId>
+            <version>${spark.version}</version>
+            <scope>${scope.type}</scope>
+        </dependency>
 
         <!--elasticsearh apache spark support-->
         <dependency>
