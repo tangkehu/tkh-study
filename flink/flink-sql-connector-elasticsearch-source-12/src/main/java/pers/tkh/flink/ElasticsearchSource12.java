@@ -7,31 +7,53 @@ import org.apache.flink.core.io.SimpleVersionedSerializer;
 import org.apache.flink.table.data.RowData;
 
 
-public class ElasticsearchSource12<RowData, SplitT extends SourceSplit, EnumChkT extends SourceSplit> implements Source<RowData, SplitT, EnumChkT>, ResultTypeQueryable<RowData> {
+public class ElasticsearchSource12 implements Source, ResultTypeQueryable {
+    private String hosts;
+    private String indices;
+    private String types;
+    private int size;
+    private int slices;
 
+    public ElasticsearchSource12(String hosts, String indices, String types, int size, int slices) {
+        this.hosts = hosts;
+        this.indices = indices;
+        this.types = types;
+        this.size = size;
+        this.slices = slices;
+    }
+
+    @Override
     public Boundedness getBoundedness() {
         return Boundedness.BOUNDED;
     }
 
-    public SourceReader<RowData, SplitT> createReader(SourceReaderContext readerContext) throws Exception {
+    @Override
+    public SourceReader createReader(SourceReaderContext readerContext) throws Exception {
+        return new ElasticsearchSourceReader(readerContext);
     }
 
-    public SplitEnumerator<SplitT, EnumChkT> createEnumerator(SplitEnumeratorContext<SplitT> enumContext) throws Exception {
+    @Override
+    public SplitEnumerator createEnumerator(SplitEnumeratorContext enumContext) throws Exception {
+        return new ElasticsearchSplitEnumerator(enumContext, hosts, indices, types, size, slices);
     }
 
-    public SplitEnumerator<SplitT, EnumChkT> restoreEnumerator(SplitEnumeratorContext<SplitT> enumContext, EnumChkT checkpoint) throws Exception {
-
+    @Override
+    public SplitEnumerator restoreEnumerator(SplitEnumeratorContext enumContext, Object checkpoint) throws Exception {
+        return null;
     }
 
-    public SimpleVersionedSerializer<SplitT> getSplitSerializer() {
-
+    @Override
+    public SimpleVersionedSerializer getSplitSerializer() {
+        return null;
     }
 
-    public SimpleVersionedSerializer<EnumChkT> getEnumeratorCheckpointSerializer() {
-
+    @Override
+    public SimpleVersionedSerializer getEnumeratorCheckpointSerializer() {
+        return null;
     }
 
-    public TypeInformation<RowData> getProducedType() {
-
+    @Override
+    public TypeInformation getProducedType() {
+        return null;
     }
 }
