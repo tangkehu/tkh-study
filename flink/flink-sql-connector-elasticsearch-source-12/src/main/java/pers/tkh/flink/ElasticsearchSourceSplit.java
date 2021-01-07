@@ -1,6 +1,8 @@
 package pers.tkh.flink;
 
+import org.apache.flink.api.common.serialization.DeserializationSchema;
 import org.apache.flink.api.connector.source.SourceSplit;
+import org.apache.flink.table.data.RowData;
 import org.elasticsearch.client.RestHighLevelClient;
 
 /**
@@ -32,21 +34,32 @@ public class ElasticsearchSourceSplit implements SourceSplit {
      */
     private String scrollId;
     /**
+     * 要取的字段
+     */
+    private String[] fields;
+    /**
      * ES的客户端连接
      */
     private RestHighLevelClient client;
+    /**
+     * 要取的字段
+     */
+    private DeserializationSchema<RowData> deserializer;
     /**
      * 是否还有下一批数据
      */
     private boolean hasNext = true;
 
-    public ElasticsearchSourceSplit(String indices, String types, int size, int slices, String splitId, RestHighLevelClient client) {
+    public ElasticsearchSourceSplit(String indices, String types, int size, int slices, String splitId, RestHighLevelClient client,
+                                    DeserializationSchema<RowData> deserializer, String[] fields) {
         this.indices = indices;
         this.types = types;
         this.size = size;
         this.slices = slices;
         this.splitId = splitId;
         this.client = client;
+        this.deserializer = deserializer;
+        this.fields = fields;
     }
 
     public String splitId() {
@@ -119,5 +132,21 @@ public class ElasticsearchSourceSplit implements SourceSplit {
 
     public boolean isEmpty() {
         return indices == null || types == null || client == null;
+    }
+
+    public DeserializationSchema<RowData> getDeserializer() {
+        return deserializer;
+    }
+
+    public void setDeserializer(DeserializationSchema<RowData> deserializer) {
+        this.deserializer = deserializer;
+    }
+
+    public String[] getFields() {
+        return fields;
+    }
+
+    public void setFields(String[] fields) {
+        this.fields = fields;
     }
 }

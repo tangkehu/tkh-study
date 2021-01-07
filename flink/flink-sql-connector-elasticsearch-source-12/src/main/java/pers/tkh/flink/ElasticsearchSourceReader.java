@@ -36,14 +36,9 @@ public class ElasticsearchSourceReader implements SourceReader<RowData, Elastics
      * 标记还有没有数据
      */
     private boolean hasNext = false;
-    /**
-     * 上下文
-     */
-    private SourceReaderContext context;
 
     public ElasticsearchSourceReader(SourceReaderContext context) {
-        this.context = context;
-        this.context.sendSplitRequest();
+        context.sendSplitRequest();
     }
 
     /**
@@ -65,7 +60,7 @@ public class ElasticsearchSourceReader implements SourceReader<RowData, Elastics
                 searchSourceBuilder.query(QueryBuilders.matchAllQuery());
                 searchSourceBuilder.slice(new SliceBuilder(Integer.parseInt(split.getSplitId()), split.getSlices()));
                 searchSourceBuilder.size(split.getSize());
-                //searchSourceBuilder.fetchSource(rowTypeInfo.getFieldNames(), null);
+                searchSourceBuilder.fetchSource(split.getFields(), null);
 
                 SearchRequest searchRequest = new SearchRequest();
                 searchRequest.indices(split.getIndices());
@@ -125,7 +120,7 @@ public class ElasticsearchSourceReader implements SourceReader<RowData, Elastics
     public InputStatus pollNext(ReaderOutput<RowData> output) throws Exception {
         SearchHit searchHit = queue.poll();
         if (searchHit != null ) {
-//            output.collect(searchHit);
+            output.collect(split.getDeserializer().deserialize(searchHit.getSourceAsString().getBytes()));
             return InputStatus.MORE_AVAILABLE;
         } else if (!hasNext) {
             return InputStatus.END_OF_INPUT;

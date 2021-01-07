@@ -1,8 +1,10 @@
 package pers.tkh.flink;
 
+import org.apache.flink.api.common.serialization.DeserializationSchema;
 import org.apache.flink.api.connector.source.SourceSplit;
 import org.apache.flink.api.connector.source.SplitEnumerator;
 import org.apache.flink.api.connector.source.SplitEnumeratorContext;
+import org.apache.flink.table.data.RowData;
 import org.apache.http.HttpHost;
 import org.apache.http.client.config.RequestConfig;
 import org.elasticsearch.client.RestClient;
@@ -23,16 +25,21 @@ public class ElasticsearchSplitEnumerator implements SplitEnumerator {
     private String types;
     private int size;
     private int slices;
+    private String[] fields;
+    private DeserializationSchema<RowData> deserializer;
     private RestClient restClient;
     private Queue<ElasticsearchSourceSplit> queue = new LinkedList<>();
 
-    public ElasticsearchSplitEnumerator(SplitEnumeratorContext context, String hosts, String indices, String types, int size, int slices) {
+    public ElasticsearchSplitEnumerator(SplitEnumeratorContext context, String hosts, String indices, String types, int size, int slices,
+                                        String[] fields, DeserializationSchema<RowData> deserializer) {
         this.context = context;
         this.hosts = hosts;
         this.indices = indices;
         this.types = types;
         this.size = size;
         this.slices = slices;
+        this.fields = fields;
+        this.deserializer = deserializer;
     }
 
     @Override
@@ -43,7 +50,7 @@ public class ElasticsearchSplitEnumerator implements SplitEnumerator {
         restClient = builder.build();
         RestHighLevelClient client = new RestHighLevelClient(restClient);
         for (int i = 0; i < slices; i++) {
-            queue.offer(new ElasticsearchSourceSplit(indices, types, size, slices, String.valueOf(i), client));
+            queue.offer(new ElasticsearchSourceSplit(indices, types, size, slices, String.valueOf(i), client, deserializer, fields));
         }
     }
 

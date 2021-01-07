@@ -1,5 +1,6 @@
 package pers.tkh.flink;
 
+import org.apache.flink.api.common.serialization.DeserializationSchema;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.connector.source.*;
 import org.apache.flink.api.java.typeutils.ResultTypeQueryable;
@@ -7,19 +8,24 @@ import org.apache.flink.core.io.SimpleVersionedSerializer;
 import org.apache.flink.table.data.RowData;
 
 
-public class ElasticsearchSource12 implements Source, ResultTypeQueryable {
+public class ElasticsearchSource implements Source, ResultTypeQueryable {
     private String hosts;
     private String indices;
     private String types;
     private int size;
     private int slices;
+    private String[] fields;
+    private DeserializationSchema<RowData> deserializer;
 
-    public ElasticsearchSource12(String hosts, String indices, String types, int size, int slices) {
+    public ElasticsearchSource(String hosts, String indices, String types, int size, int slices, String[] fields,
+                               DeserializationSchema<RowData> deserializer) {
         this.hosts = hosts;
         this.indices = indices;
         this.types = types;
         this.size = size;
         this.slices = slices;
+        this.fields = fields;
+        this.deserializer = deserializer;
     }
 
     @Override
@@ -34,7 +40,7 @@ public class ElasticsearchSource12 implements Source, ResultTypeQueryable {
 
     @Override
     public SplitEnumerator createEnumerator(SplitEnumeratorContext enumContext) throws Exception {
-        return new ElasticsearchSplitEnumerator(enumContext, hosts, indices, types, size, slices);
+        return new ElasticsearchSplitEnumerator(enumContext, hosts, indices, types, size, slices, fields, deserializer);
     }
 
     @Override
@@ -54,6 +60,6 @@ public class ElasticsearchSource12 implements Source, ResultTypeQueryable {
 
     @Override
     public TypeInformation getProducedType() {
-        return null;
+        return deserializer.getProducedType();
     }
 }
