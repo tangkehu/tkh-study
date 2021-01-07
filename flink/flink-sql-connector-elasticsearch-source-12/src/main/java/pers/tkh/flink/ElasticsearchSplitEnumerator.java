@@ -44,14 +44,18 @@ public class ElasticsearchSplitEnumerator implements SplitEnumerator {
 
     @Override
     public void start() {
-        RestClientBuilder builder = RestClient.builder(HttpHost.create(hosts));
-        builder.setMaxRetryTimeoutMillis(5 * 60 * 1000);
-        builder.setRequestConfigCallback((RequestConfig.Builder conf) -> conf.setSocketTimeout(5 * 60 * 1000));
-        restClient = builder.build();
-        RestHighLevelClient client = new RestHighLevelClient(restClient);
-        for (int i = 0; i < slices; i++) {
-            queue.offer(new ElasticsearchSourceSplit(indices, types, size, slices, String.valueOf(i), client, deserializer, fields));
-        }
+//        try {
+//            RestClientBuilder builder = RestClient.builder(HttpHost.create(hosts));
+//            builder.setMaxRetryTimeoutMillis(5 * 60 * 1000);
+//            builder.setRequestConfigCallback((RequestConfig.Builder conf) -> conf.setSocketTimeout(5 * 60 * 1000));
+//            restClient = builder.build();
+//            RestHighLevelClient client = new RestHighLevelClient(restClient);
+//            for (int i = 0; i < slices; i++) {
+//                queue.offer(new ElasticsearchSourceSplit(indices, types, size, slices, String.valueOf(i), client, deserializer, fields));
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     @Override
@@ -76,7 +80,7 @@ public class ElasticsearchSplitEnumerator implements SplitEnumerator {
 
     @Override
     public Object snapshotState() throws Exception {
-        return null;
+        return queue;
     }
 
     @Override

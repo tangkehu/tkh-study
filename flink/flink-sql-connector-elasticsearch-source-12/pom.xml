@@ -28,12 +28,12 @@
             <version>1.12.0</version>
 <!--            <scope>provided</scope>-->
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.apache.flink</groupId>-->
-<!--            <artifactId>flink-streaming-scala_2.11</artifactId>-->
-<!--            <version>1.12.0</version>-->
-<!--&lt;!&ndash;            <scope>provided</scope>&ndash;&gt;-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-streaming-scala_2.11</artifactId>
+            <version>1.12.0</version>
+<!--            <scope>provided</scope>-->
+        </dependency>
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-clients_2.11</artifactId>

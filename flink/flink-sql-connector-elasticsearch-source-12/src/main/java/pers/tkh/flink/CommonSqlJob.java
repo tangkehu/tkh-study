@@ -6,7 +6,7 @@ import org.apache.flink.table.api.EnvironmentSettings;
 import org.apache.flink.table.api.bridge.java.StreamTableEnvironment;
 
 public class CommonSqlJob {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         EnvironmentSettings fsSettings = EnvironmentSettings.newInstance().useBlinkPlanner().inStreamingMode().build();
         StreamExecutionEnvironment fsEnv = StreamExecutionEnvironment.getExecutionEnvironment();
         fsEnv.setRuntimeMode(RuntimeExecutionMode.BATCH);
@@ -22,6 +22,7 @@ public class CommonSqlJob {
                 "  'hosts' = 'http://localhost:9200',\n" +
                 "  'indices' = 'users',\n" +
                 "  'types' = 'users',\n" +
+                "  'slices' = '1',\n" +
                 "  'format' = 'json'\n"+
                 ")");
         fsTableEnv.executeSql("CREATE TABLE myUserTable (\n" +
@@ -38,6 +39,5 @@ public class CommonSqlJob {
                 "  'format' = 'json'\n"+
                 ")");
         fsTableEnv.executeSql("INSERT INTO myUserTable SELECT * FROM sourceTable");
-//        fsTableEnv.execute("name");
     }
 }
