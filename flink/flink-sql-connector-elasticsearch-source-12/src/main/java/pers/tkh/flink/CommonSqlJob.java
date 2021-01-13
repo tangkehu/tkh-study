@@ -22,7 +22,7 @@ public class CommonSqlJob {
                 "  'hosts' = 'http://localhost:9200',\n" +
                 "  'indices' = 'users',\n" +
                 "  'types' = 'users',\n" +
-                "  'slices' = '1',\n" +
+                "  'slices' = '2',\n" +
                 "  'format' = 'json'\n"+
                 ")");
         fsTableEnv.executeSql("CREATE TABLE myUserTable (\n" +
