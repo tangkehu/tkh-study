@@ -5,6 +5,7 @@ import org.apache.flink.table.connector.ChangelogMode;
 import org.apache.flink.table.connector.format.DecodingFormat;
 import org.apache.flink.table.connector.source.DynamicTableSource;
 import org.apache.flink.table.connector.source.ScanTableSource;
+import org.apache.flink.table.connector.source.SourceFunctionProvider;
 import org.apache.flink.table.connector.source.SourceProvider;
 import org.apache.flink.table.data.RowData;
 
@@ -37,9 +38,12 @@ public class ElasticsearchTableSource implements ScanTableSource {
     public ScanRuntimeProvider getScanRuntimeProvider(ScanContext runtimeProviderContext) {
         final DeserializationSchema<RowData> deserializer = decodingFormat.createRuntimeDecoder(
                 runtimeProviderContext, schema.toPhysicalRowDataType());
-        final ElasticsearchSource source = new ElasticsearchSource(hosts, indices, types, size, slices,
+//        final ElasticsearchSource source = new ElasticsearchSource(hosts, indices, types, size, slices,
+//                schema.getFieldNames(), deserializer);
+        final ElasticsearchSourceFunction sourceFunction = new ElasticsearchSourceFunction(hosts, indices, types, size, slices,
                 schema.getFieldNames(), deserializer);
-        return SourceProvider.of(source);
+//        return SourceProvider.of(source);
+        return SourceFunctionProvider.of(sourceFunction, false);
     }
 
     @Override
