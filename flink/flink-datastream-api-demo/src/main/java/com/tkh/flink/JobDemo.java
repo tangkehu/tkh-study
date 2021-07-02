@@ -5,6 +5,7 @@ import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.functions.ReduceFunction;
+import org.apache.flink.api.java.ExecutionEnvironment;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.configuration.Configuration;
@@ -22,10 +23,11 @@ public class JobDemo {
     public static void main(String[] args) throws Exception{
         Map<String, String> config = new HashMap<>();
         config.put("rest.port", "8081");
-
+//        config.put("execution.savepoint.path", "hdfs:///flink/savepoint-1537");
+//        config.put("execution.savepoint.ignore-unclaimed-state", "true");
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment(Configuration.fromMap(config));
         StreamTableEnvironment tEnv = StreamTableEnvironment.create(env);
-        env.setParallelism(6);
+        env.setParallelism(1);
         env.setRuntimeMode(RuntimeExecutionMode.STREAMING);
 
 //        env.readTextFile("pom.xml")
@@ -53,7 +55,7 @@ public class JobDemo {
                 " f_random_str STRING\n" +
                 ") WITH (\n" +
                 " 'connector' = 'datagen',\n" +
-                " 'rows-per-second'='100000000',\n" +
+                " 'rows-per-second'='10000',\n" +
                 " 'fields.f_random.min'='1',\n" +
                 " 'fields.f_random.max'='1000',\n" +
                 " 'fields.f_random_str.length'='10'\n" +
